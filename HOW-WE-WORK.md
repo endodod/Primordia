@@ -16,19 +16,21 @@ does it again. That's it. Covering it up is the only real crime.
 
 ## The rules
 
-1. **No issue, no work.** Grab it from the board, assign yourself, then start.
+1. **No issue, no work.** Run `/next-ticket`, claim it (you get assigned), then start. Assigned = taken.
 2. **Never push to `main` or `dev`.** Branch, PR, review. Always.
 3. **Read your own diff before asking for review.** Every line. If you can't explain it, it
    doesn't go in.
 4. **Small PRs.** If nobody wants to review it, it's too big.
-5. **Review others within 48h.** Reviews are part of the job, not a favor. Don't approve stuff
+5. **You merge your own PRs on `dev`** — after CI is green and you've read the diff. Risky
+   stuff (engine, run files, leaderboard, CI) waits for a teammate's approval. No exceptions.
+6. **Review others within 48h.** Reviews are part of the job, not a favor. Don't approve stuff
    you didn't actually look at.
-6. **Red CI is not optional.** Fix it, don't re-run it and pray.
-7. **Don't break determinism.** Same run = same result, everywhere. If you touch the engine,
+7. **Red CI is not optional.** Fix it, don't re-run it and pray.
+8. **Don't break determinism.** Same run = same result, everywhere. If you touch the engine,
    you test it. If you don't understand why this matters, ask before touching the engine.
-8. **Don't break old run files.** Format change = version bump + migration.
-9. **Secrets never go in the repo.** Leaked one? Tell us immediately, rotate it.
-10. **Update the docs** when you change how something works.
+9. **Don't break old run files.** Format change = version bump + migration.
+10. **Secrets never go in the repo.** Leaked one? Tell us immediately, rotate it.
+11. **Update the docs** when you change how something works.
 
 ## Being a good teammate
 
