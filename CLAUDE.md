@@ -130,14 +130,25 @@ These commands describe the planned setup. If one is wrong or missing, fix this 
 
 ## 6. Workflow for every task
 
-### 6.1 Start
-1. Read the issue: `gh issue view <N> --comments`. Read linked ADRs/docs and the relevant
-   roadmap phase.
-2. If acceptance criteria are unclear or the task conflicts with an ADR or the roadmap, **stop
-   and ask**.
-3. Assign and mark in progress: `gh issue edit <N> --add-assignee @me`, then set Status to
-   **In Progress** on the GitHub Project.
-4. For anything beyond a small change, propose a plan first and wait for approval.
+### 6.1 Start — pick and claim (use the `/next-ticket` skill)
+Several people run Claude agents in parallel. **The issue assignee is the lock**: an assigned
+issue belongs to that person. Never work on an issue assigned to someone else.
+
+1. See what's taken and what's next: `python3 scripts/next-ticket.py`
+   (order: milestone → priority → size; skips assigned, blocked and PR'd issues).
+   Issues have GitHub "blocked by" dependencies — never start a blocked issue.
+2. Claim before writing any code: `python3 scripts/next-ticket.py --claim <N>`.
+   If it refuses, **stop** and pick another issue.
+3. Search Notion Agent Notes for the issue, then read it: `gh api repos/endodod/Primordia/issues/<N>`
+   plus comments. Read linked ADRs/docs and the roadmap phase.
+4. If acceptance criteria are unclear or conflict with an ADR or the roadmap, **stop and ask**.
+5. For anything beyond a small change, propose a plan first and wait for approval.
+6. Stopping before done: write a Handover note, push the branch, then
+   `python3 scripts/next-ticket.py --release <N>`.
+
+Cloud sessions can't use GraphQL (`gh issue list`, `gh pr create`, `gh project …`); use
+`gh api repos/...` REST calls and the scripts above. Local sessions may also move the project
+card to **In Progress**.
 
 ### 6.2 Branch
 - `dev` is the default branch. Always branch from an up-to-date `dev`:
