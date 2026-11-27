@@ -106,8 +106,9 @@ These commands describe the planned setup. If one is wrong or missing, fix this 
 ## 5. Hard rules — NEVER
 
 - **NEVER** push to `main` or `dev` directly. All changes go through PRs.
-- **NEVER** merge a PR yourself, approve a PR, or bypass branch protection. You may enable
-  auto-merge (`gh pr merge --auto --squash`) on PRs you opened; a human approval is still required.
+- **NEVER** merge a PR yourself, approve a PR, or bypass branch protection. The developer
+  merges. For non-risky PRs you may enable auto-merge **only when the developer asks** after
+  reading the diff; risky PRs (§6.4) never get auto-merge before a teammate approved.
 - **NEVER** force-push to any branch except your own feature branch, and not after review has
   started unless the developer asks.
 - **NEVER** commit secrets, tokens, `.env` files or credentials. Document new variables in
@@ -191,8 +192,14 @@ No attribution trailers — the message ends after `Refs #<N>`.
 - **Size limit: ~400 changed lines** (excluding generated files and lockfiles). If larger, split
   into stacked PRs and say so.
 - Open as **draft** if not ready.
-- `gh pr create --base dev --fill-first`, edit the body to match the template, then
-  `gh pr merge --auto --squash`, and report the PR link to the developer.
+- Open it with `gh pr create --base dev` (local) or
+  `gh api repos/endodod/Primordia/pulls -f title=… -f head=… -f base=dev -F body=@file` (cloud),
+  then report the PR link to the developer.
+- **Who must review:** `dev` needs no required approval, but a **teammate review is mandatory
+  for risky PRs** — anything touching `engine/` (determinism), the run file format, leaderboard
+  verification / identity / stored data, `.github/` (CI, rulesets) or DB migrations. Mark these
+  in the PR's Risk section and ask the developer to request a review from the area owner.
+  Everything else: the developer self-reviews and merges once CI is green.
 
 ### 6.5 Before marking ready
 - [ ] Formatter, linter, typecheck and tests pass for every touched area
@@ -407,7 +414,7 @@ Report honestly: what you did, what you verified, what failed, what you skipped.
 ## 16. Definition of done
 
 - [ ] Linked issue's acceptance criteria met
-- [ ] PR against the right base, template filled, `Closes #N`, auto-merge enabled
+- [ ] PR against the right base, template filled, `Closes #N`; teammate review requested if risky
 - [ ] CI green (incl. cross-platform determinism, fixtures, benchmarks)
 - [ ] Tests added/updated
 - [ ] Docs / run-format doc / `.env.example` updated where relevant

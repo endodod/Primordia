@@ -77,7 +77,7 @@ A fresh clone that doesn't work with these steps is a bug — open an issue.
 ```
 Plan together  →  Issues on the board  →  Everyone picks issues  →  Claude builds on a branch
      ↑                                                                        ↓
-  Retro & re-plan  ←  Demo  ←  Release  ←  Auto-merge  ←  Human review  ←  PR + CI
+  Retro & re-plan  ←  Demo  ←  Release  ←  You merge  ←  Self-review (+ teammate if risky)  ←  PR + CI
 ```
 
 - **Planning** together at each phase kickoff, with Claude helping to break work into issues.
@@ -99,9 +99,10 @@ Plan together  →  Issues on the board  →  Everyone picks issues  →  Claude
 3. **Approve or fix the plan.** Use plan mode for anything non-trivial.
 4. **Let Claude build — stay involved.** Run the app, look at the simulation, check direction.
 5. **Read your whole diff** before requesting review. You own every line.
-6. **Claude opens the PR**: template filled, `Closes #42`, auto-merge on.
+6. **Claude opens the PR**: template filled, `Closes #42`.
 7. **Review** is requested from the code owner automatically. Ping chat if urgent.
-8. **Fix feedback** → approval → GitHub merges → branch deleted → issue Done.
+8. **Merge it yourself** once CI is green (risky PRs: after a teammate approved) → branch
+   deleted → issue Done.
 9. **Do your own reviews** — check the queue daily.
 
 ---
@@ -159,7 +160,11 @@ PRs are **squash-merged** → the **PR title** is the commit on `dev` and feeds 
 - **< ~400 changed lines** (excluding generated files/lockfiles). Split otherwise.
 - **Template filled**: what, why, how to test, screenshots/GIFs, risks.
 - **Draft early** if you want feedback on direction.
-- **Never self-merge, never approve your own PR.** Auto-merge does it after approval + CI.
+- **On `dev` you merge your own PR** once CI is green and you've read every line of the diff.
+- **Risky PRs need a teammate's approval first** — `engine/`, run file format, leaderboard
+  verification / identity / stored data, `.github/`, DB migrations (the 🔴 rows in §7).
+  GitHub doesn't enforce this on `dev`; we do.
+- **Releases (`dev → main`) always need 1 approval** — that one GitHub enforces.
 - **Call out risky parts** so reviewers know where to look.
 - Reviewer resolves threads, not the author.
 - PR idle for 5 days → discussed at the next check-in.
@@ -245,9 +250,9 @@ Rulesets are stored in `.github/rulesets/*.json` and applied with `scripts/setup
 
 **`main` and `dev`:**
 - ✅ PR required
-- ✅ **1 approval on `dev`**, **1 approval + release checklist on `main`**
-- ✅ Dismiss stale approvals on new commits
-- ✅ CODEOWNERS review required
+- ✅ **`dev`: 0 required approvals** (risky PRs still need a teammate — team rule, §6)
+- ✅ **`main`: 1 approval + release checklist**, stale approvals dismissed
+- ⏳ CODEOWNERS review: off until area owners are assigned
 - ✅ All status checks must pass
 - ✅ Branch must be up to date
 - ✅ Conversations resolved
