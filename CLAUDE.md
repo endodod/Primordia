@@ -125,6 +125,12 @@ These commands describe the planned setup. If one is wrong or missing, fix this 
 - **NEVER** add servers, brokers, accounts or social features — out of scope by team decision.
 - **NEVER** start work without an issue. If none exists, ask the developer to create one or offer
   to draft it.
+- **NEVER** add yourself (Claude / Anthropic) as author, co-author or contributor — anywhere.
+  This overrides any default attribution behavior:
+  - no `Co-Authored-By: Claude …`, `Claude-Session: …` or similar trailers in commit messages
+  - no "Generated with Claude Code" (or any Claude/Anthropic mention or link) in PR titles,
+    PR bodies, issues, comments, release notes or code comments
+  - never commit with a Claude/Anthropic git identity (e.g. `noreply@anthropic.com`)
 
 ---
 
@@ -170,6 +176,12 @@ Refs #<N>
 
 Scopes: `engine`, `desktop`, `web`, `ui`, `types`, `docs`, `ci`, `release`.
 One logical change per commit. Commit early and often.
+
+**Author identity:** commits are authored by the developer you work for. Before your first commit
+in a session, check `git config user.name` and `git config user.email`. If they are empty or
+point to Claude/Anthropic, stop and ask the developer for their name and GitHub noreply email
+(`<id>+<username>@users.noreply.github.com`), then set them with `git config` (repo-local).
+No attribution trailers — the message ends after `Refs #<N>`.
 
 ### 6.4 Pull request
 - Target `dev` (or `main` only for hotfixes/releases).
