@@ -91,7 +91,10 @@ Plan together  →  Issues on the board  →  Everyone picks issues  →  Claude
 
 ## 3. Daily workflow
 
-1. **Pick** an issue from **Ready**. Assign yourself. Max 2 in progress.
+1. **Pick and claim.** In Claude, run `/next-ticket` (or `python3 scripts/next-ticket.py`). It
+   shows what's taken and what's next. Claim with `--claim <N>`. **The assignee is the lock**:
+   never work on an issue assigned to someone else. Max 2 in progress. Blocked issues
+   ("blocked by" on GitHub) wait until their blockers are closed.
 2. **Start Claude** in the repo: *"Work on issue #42. Propose a plan first."*
 3. **Approve or fix the plan.** Use plan mode for anything non-trivial.
 4. **Let Claude build — stay involved.** Run the app, look at the simulation, check direction.
