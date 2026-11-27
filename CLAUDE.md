@@ -93,6 +93,8 @@ pnpm format
 # engine
 cargo test -p primordia-engine     # determinism tests (must pass for any engine change)
 cargo bench -p primordia-engine    # performance benchmarks (added in Phase 1)
+cargo llvm-cov -p primordia-engine --summary-only   # coverage (CI: every PR)
+cargo mutants -p primordia-engine   # mutation testing (CI: nightly + changed lines on PRs)
 pnpm build:wasm                     # build engine.wasm for the web app
 
 # generated types
@@ -325,6 +327,10 @@ No attribution trailers — the message ends after `Refs #<N>`.
   must always be green.
 - Run-format fixture tests: every historical version loads and migrates correctly.
 - Benchmarks run in CI; investigate regressions before merging.
+- **Coverage** (`cargo-llvm-cov`) runs on every PR; it shows what the tests run, not what they check.
+- **Mutation testing** (`cargo-mutants`) runs nightly and on PRs touching `engine/` (changed lines
+  only). A missed mutant means a change in behaviour no test notices: add a test that catches it.
+  Advisory for now; don't paper over it with tests that only raise coverage.
 - TS: Vitest for units; Playwright for key desktop/web flows where feasible.
 - Bug fix ⇒ regression test that fails without the fix.
 - Flaky tests: fix or quarantine with an issue reference — never retry-until-green.

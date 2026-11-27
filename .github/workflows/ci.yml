@@ -77,11 +77,37 @@ jobs:
       - run: pnpm --filter @primordia/desktop build
       - run: cargo clippy -p primordia-desktop -- -D warnings
 
+  coverage:
+    name: Engine coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup component add llvm-tools-preview
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-llvm-cov
+      - name: Run tests with coverage
+        run: cargo llvm-cov -p primordia-engine --no-report
+      - name: Report
+        run: |
+          cargo llvm-cov report --lcov --output-path lcov.info
+          {
+            echo '### Engine coverage'
+            echo '```'
+            cargo llvm-cov report --summary-only
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: engine-coverage-lcov
+          path: lcov.info
+
   # Single required check for branch protection — add new jobs to `needs`.
   ci-success:
     name: ci-success
     if: always()
-    needs: [engine, wasm, node, desktop]
+    needs: [engine, coverage, wasm, node, desktop]
     runs-on: ubuntu-latest
     steps:
       - name: All jobs passed
