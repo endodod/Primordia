@@ -1,0 +1,27 @@
+name: Bug
+description: Something is broken
+labels: ['type: bug']
+body:
+  - type: textarea
+    id: what
+    attributes: { label: What happened? }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: What did you expect? }
+    validations: { required: true }
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Include seed / run file and engine version if it's a simulation bug.
+    validations: { required: true }
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options: [engine, desktop, web, docs, infra]
+  - type: input
+    id: platform
+    attributes: { label: Platform, placeholder: 'e.g. Windows 11, macOS 15, Ubuntu 24.04' }

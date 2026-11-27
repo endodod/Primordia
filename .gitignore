@@ -1,0 +1,27 @@
+# deps / build
+node_modules/
+target/
+dist/
+build/
+.next/
+out/
+.turbo/
+.docusaurus/
+*.tsbuildinfo
+next-env.d.ts
+apps/desktop/src-tauri/gen/
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# claude personal
+CLAUDE.local.md
+.claude/settings.local.json
+
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+*.swp

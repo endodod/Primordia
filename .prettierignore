@@ -1,0 +1,9 @@
+target/
+node_modules/
+.next/
+.docusaurus/
+build/
+dist/
+pnpm-lock.yaml
+packages/types/src/generated/
+*.md

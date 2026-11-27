@@ -1,0 +1,28 @@
+name: Feature
+description: New functionality
+labels: ['type: feature']
+body:
+  - type: textarea
+    id: goal
+    attributes: { label: Goal, description: What should exist when this is done? }
+    validations: { required: true }
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Acceptance criteria
+      value: |
+        - [ ]
+    validations: { required: true }
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options: [engine, desktop, web, docs, infra]
+    validations: { required: true }
+  - type: dropdown
+    id: size
+    attributes: { label: Size, options: ['S (≤ half day)', 'M (1–2 days)', 'L (split it!)'] }
+  - type: textarea
+    id: context
+    attributes: { label: Context, description: Roadmap phase, ADRs, docs, related issues }

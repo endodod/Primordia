@@ -1,0 +1,17 @@
+[workspace]
+resolver = "2"
+members = ["engine", "apps/desktop/src-tauri"]
+
+[workspace.package]
+edition = "2021"
+license = "UNLICENSED" # TODO: choose MIT or Apache-2.0 (roadmap §12)
+repository = "https://github.com/endodod/Primordia"
+
+[workspace.dependencies]
+primordia-engine = { path = "engine" }
+rand_chacha = "0.3"
+rand_core = "0.6"
+
+[profile.release]
+lto = true
+codegen-units = 1

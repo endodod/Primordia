@@ -1,0 +1,15 @@
+[package]
+name = "primordia-desktop"
+version = "0.0.0"
+description = "Primordia desktop lab"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+primordia-engine.workspace = true
+serde = { version = "1", features = ["derive"] }
+tauri = { version = "2", features = [] }

@@ -1,0 +1,14 @@
+[package]
+name = "primordia-engine"
+version = "0.0.0"
+description = "Deterministic evolution simulation core for Primordia"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "engine"
+
+[dependencies]
+rand_chacha.workspace = true
+rand_core.workspace = true

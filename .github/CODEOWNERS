@@ -1,0 +1,12 @@
+# Code owners — fill in per area once roles are assigned (DEV.md §20).
+# Until then everything is owned by the repo owner. When real owners are set,
+# enable "require code owner review" in the rulesets (.github/rulesets/*.json).
+
+*                    @endodod
+
+# /engine/           @engine-owner
+# /apps/desktop/     @desktop-owner
+# /packages/ui/      @desktop-owner
+# /apps/web/         @leaderboard-owner
+# /apps/docs/        @leaderboard-owner
+# /.github/          @release-owner
