@@ -2,9 +2,11 @@
 # One-time GitHub setup for Primordia: repo settings, dev branch, rulesets, labels,
 # milestones, Pages and the project board.
 #
-# Run by a repo admin AFTER the first push to main:
+# Run LOCALLY by a repo admin (Claude cloud sessions can't change settings, rulesets or
+# Projects). Labels, milestones and issues were already created via seed-issues.py.
+#
 #   gh auth login
-#   gh auth refresh -s project,admin:org   # project scope needed for the board
+#   gh auth refresh -s project              # project scope needed for the board
 #   ./scripts/setup-github.sh
 #
 # Safe to re-run: existing rulesets/labels/milestones are updated or skipped.
@@ -44,36 +46,8 @@ for file in "$ROOT"/.github/rulesets/*.json; do
   fi
 done
 
-echo "==> Labels"
-label() { gh label create "$1" --repo "$REPO" --color "$2" --description "$3" --force >/dev/null; }
-label "area: engine"   "8957e5" "Simulation engine"
-label "area: desktop"  "1f6feb" "Desktop app"
-label "area: web"      "2ea043" "Website / leaderboard"
-label "area: docs"     "d29922" "Docs site, ADRs, devlog"
-label "area: infra"    "6e7781" "CI, release, repo"
-label "type: feature"  "0e8a16" "New functionality"
-label "type: bug"      "d73a4a" "Something is broken"
-label "type: chore"    "c5def5" "Tooling, refactor, deps"
-label "P0"             "b60205" "Must, now"
-label "P1"             "fbca04" "Should"
-label "P2"             "c2e0c6" "Could"
-label "good first issue" "7057ff" "Small, self-contained"
-label "determinism"    "e99695" "Affects simulation outcomes"
-
-echo "==> Milestones"
-milestone() {
-  if ! gh api "repos/$REPO/milestones?state=all" -q ".[].title" | grep -qxF "$1"; then
-    gh api -X POST "repos/$REPO/milestones" -f title="$1" -f description="$2" >/dev/null
-    echo "   created $1"
-  fi
-}
-milestone "v0.0 Foundation"                 "Phase 0 — repo, CI, a dot moves"
-milestone "v0.1 First Life"                 "Phase 1 — creatures evolve deterministically"
-milestone "v0.2 The Lab"                    "Phase 2 — designer, biomes, rules, events, batch runs"
-milestone "v0.3 Local Gallery"              "Phase 3 — gallery, replays, remix"
-milestone "v0.4 Challenges & Leaderboard"   "Phase 4 — verified online leaderboard"
-milestone "v1.0 Launch"                     "Phase 5 — installers, docs, beta"
-milestone "v2.0 Brains"                     "Phase 6 — neural-network brains"
+echo "==> Labels, milestones, issues"
+python3 "$ROOT/scripts/seed-issues.py" --repo "$REPO"
 
 echo "==> GitHub Pages (Actions)"
 gh api -X POST "repos/$REPO/pages" -f build_type=workflow >/dev/null 2>&1 \
@@ -92,6 +66,8 @@ if ! gh project list --owner "$OWNER" --format json -q '.projects[].title' | gre
     --single-select-options "P0,P1,P2" >/dev/null
   echo "   created project #$NUMBER"
 fi
+echo "==> Adding issues to the board"
+python3 "$ROOT/scripts/sync-project.py" --repo "$REPO"
 
 cat <<'MANUAL'
 

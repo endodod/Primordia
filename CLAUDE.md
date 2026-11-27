@@ -81,8 +81,8 @@ pnpm install
 
 # develop
 cargo tauri dev                     # desktop app
-pnpm dev --filter web               # leaderboard / website
-pnpm dev --filter docs              # docs site
+pnpm dev --filter @primordia/web    # leaderboard / website
+pnpm dev --filter @primordia/docs   # docs site
 
 # quality — run the relevant ones before every commit
 cargo fmt --all && cargo clippy --all-targets -- -D warnings
@@ -91,8 +91,8 @@ pnpm lint && pnpm typecheck && pnpm test
 pnpm format
 
 # engine
-cargo test -p engine determinism    # determinism tests (must pass for any engine change)
-cargo bench -p engine               # performance benchmarks
+cargo test -p primordia-engine     # determinism tests (must pass for any engine change)
+cargo bench -p primordia-engine    # performance benchmarks (added in Phase 1)
 pnpm build:wasm                     # build engine.wasm for the web app
 
 # generated types
