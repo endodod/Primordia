@@ -30,15 +30,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # PRs need the base branch to compute the diff
-          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 1 }}
+          fetch-depth: 0 # PRs diff against the base commit
       - uses: Swatinem/rust-cache@v2
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-mutants
       - name: Diff against base (PRs only)
         if: github.event_name == 'pull_request'
-        run: git diff "origin/${{ github.base_ref }}...HEAD" > pr.diff
+        run: git diff "${{ github.event.pull_request.base.sha }}...HEAD" > pr.diff
       - name: Run cargo-mutants
         run: |
           args=(-p primordia-engine --no-shuffle)
