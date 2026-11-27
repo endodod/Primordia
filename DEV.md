@@ -220,6 +220,8 @@ PRs are **squash-merged** → the **PR title** is the commit on `dev` and feeds 
 | **Run-format fixtures** | every historical format version loads + migrates | ✅ |
 | Generated types up to date | regenerate + diff must be empty | ✅ |
 | Benchmarks | `cargo bench` vs. baseline | ⚠️ alert on regression |
+| Coverage (engine) | `cargo-llvm-cov`, summary + lcov artifact | ✅ (tests must pass, no threshold yet) |
+| Mutation testing (engine) | `cargo-mutants`, changed lines on PRs, full run nightly | ⚠️ advisory |
 | Builds | Tauri (Linux on PRs), WASM, web, docs | ✅ |
 | Security | Dependabot, `cargo audit`, secret scanning | ⚠️ alerts |
 | AI review | Claude GitHub Action | ❌ advisory |

@@ -25,3 +25,8 @@ CLAUDE.local.md
 Thumbs.db
 .idea/
 *.swp
+
+# test reports
+mutants.out/
+mutants.out.old/
+lcov.info

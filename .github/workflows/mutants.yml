@@ -1,0 +1,71 @@
+name: Mutation testing
+
+# cargo-mutants changes the engine's code (e.g. `-` to `+`) and checks that a test fails.
+# A "missed" mutant is code our tests don't really check. It's slow, so it runs nightly
+# on the whole engine, and on PRs only for the lines the PR changed. Advisory: missed
+# mutants and timeouts show as warnings; only real errors fail the job.
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # nightly, 03:00 UTC
+  workflow_dispatch:
+  pull_request:
+    paths: ['engine/**', 'Cargo.toml', 'Cargo.lock', '.github/workflows/mutants.yml']
+
+concurrency:
+  group: mutants-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  mutants:
+    name: Engine mutants
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # PRs diff against the base commit
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-mutants
+      - name: Diff against base (PRs only)
+        if: github.event_name == 'pull_request'
+        run: git diff "${{ github.event.pull_request.base.sha }}...HEAD" > pr.diff
+      - name: Run cargo-mutants
+        run: |
+          args=(-p primordia-engine --no-shuffle)
+          if [[ -f pr.diff ]]; then args+=(--in-diff pr.diff); fi
+          set +e
+          cargo mutants "${args[@]}"
+          code=$?
+          set -e
+          {
+            echo '### Engine mutation testing'
+            for f in caught missed timeout unviable; do
+              n=$(wc -l < "mutants.out/$f.txt" 2>/dev/null || echo 0)
+              echo "- $f: $n"
+            done
+            if [[ -s mutants.out/missed.txt ]]; then
+              echo; echo 'Missed mutants (code the tests do not check):'
+              echo '```'; cat mutants.out/missed.txt; echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          # 0 = all caught, 2 = missed mutants, 3 = timeouts → advisory for now (#85)
+          case $code in
+            0) ;;
+            2|3) echo "::warning::cargo-mutants found missed or timed-out mutants, see the job summary" ;;
+            *) exit $code ;;
+          esac
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mutants-out
+          path: mutants.out
+          if-no-files-found: ignore
